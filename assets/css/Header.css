@@ -1,0 +1,9 @@
+.bg-turquoise {
+    background-color: #007E58;
+}
+
+.btn.btn-search:hover {
+    background-color: #007E58;
+    color: #00FFB4;
+    border: 1px solid #00FFB4;
+}

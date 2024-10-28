@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "nuxt": "^3.13.2",
+    "nuxt-bootstrap-icons": "^2.1.0",
     "usebootstrap": "^3.5.99",
     "vue": "latest",
     "vue-router": "latest"
