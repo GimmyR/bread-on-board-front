@@ -5,6 +5,8 @@
 </script>
 
 <template>
-    <CallToAction/>
-    <RecipeSection/>
+    <div>
+        <CallToAction/>
+        <RecipeSection/>
+    </div>
 </template>
