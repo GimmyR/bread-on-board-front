@@ -5,7 +5,7 @@
 </script>
 
 <template>
-    <div>
+    <div class="pt-5">
         <CallToAction/>
         <RecipeSection/>
     </div>
