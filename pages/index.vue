@@ -6,4 +6,5 @@
 
 <template>
     <CallToAction/>
+    <RecipeSection/>
 </template>
