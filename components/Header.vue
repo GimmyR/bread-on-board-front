@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand bg-turquoise">
+  <nav class="navbar navbar-expand bg-success">
     <div class="container-fluid-md container">
       <a class="navbar-brand text-light fw-bold" href="#">Bread on Board</a>
         <b-button color="outline-light" toggle="modal" target="#searchModal" class="col-lg-4 text-start btn-search d-none d-lg-block">
