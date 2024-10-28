@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand bg-success">
+  <nav class="navbar fixed-top navbar-expand bg-success">
     <div class="container-fluid-md container">
       <NuxtLink class="navbar-brand text-light fw-bold" to="/">Bread on Board</NuxtLink>
         <b-button color="outline-light" toggle="modal" target="#searchModal" class="col-lg-4 text-start btn-search d-none d-lg-block">
