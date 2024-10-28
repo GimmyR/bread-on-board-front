@@ -9,5 +9,5 @@
 </template>
 
 <script setup>
-  const { data: recipes } = useFetch('http://localhost:9001/api/recipe/get-all/');
+  const { data: recipes } = await useFetch('http://localhost:9001/api/recipe/get-all/');
 </script>
