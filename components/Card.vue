@@ -1,6 +1,6 @@
 <template>
   <div class="card col p-0">
-    <img :src="`http://localhost:9001/images/${recipe.image}`" class="card-img-top" alt="recipe image">
+    <img :src="`http://localhost:9001/images/${recipe.image}`" class="card-img-top" alt="recipe image" height="200">
     <div class="card-body">
       <p class="card-text">{{ recipe.title }}</p>
       <NuxtLink :to="`/recipe/${recipe.id}`" class="btn btn-success">Voir la recette</NuxtLink>
