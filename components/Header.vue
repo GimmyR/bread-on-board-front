@@ -13,7 +13,7 @@
             </b-button>
           </li>
           <li class="nav-item">
-            <NavIcon to="#" title="Créer une recette" icon="plus-lg"/>
+            <NavIcon to="/recipe/create" title="Créer une recette" icon="plus-lg"/>
           </li>
           <li class="nav-item">
             <NavIcon to="#" title="Connexion" icon="person-circle"/>
