@@ -5,17 +5,23 @@
         <label for="title" class="form-label text-success fw-bold">Titre de la recette</label>
         <input type="text" class="form-control" name="title" v-model="title">
       </div>
-      <div class="mb-4">
+      <div class="mb-5">
         <label for="image" class="form-label text-success fw-bold">Image de la recette</label>
         <input type="file" class="form-control" accept="image/*" name="image" @change="fileSelected">
+        <Transition name="image">
+          <template v-if="image != null">
+            <img :src="imgURL" class="img-fluid mt-4"/>
+          </template>
+        </Transition>
       </div>
       <div class="mb-4">
         <label for="ingredients" class="form-label text-success fw-bold">Les ingrédients de la recette</label>
         <textarea name="ingredients" class="form-control" v-model="ingredients"></textarea>
       </div>
       <div class="d-flex flex-row justify-content-end align-items-center">
-        <BIcon icon="bi:check-circle" v-show="showCorrect" class="text-success"/>
-        <Spinner sm v-show="showSprinner" text-color="secondary"/>
+        <Transition name="spinner">
+          <Spinner sm v-show="showSpinner" text-color="secondary"/>
+        </Transition>
         <b-button color="success" type="submit" class="ms-3">Créer la recette</b-button>
       </div>
     </form>
@@ -23,42 +29,39 @@
 </template>
 
 <script setup>
+  import '~/assets/css/create.css';
+  
   useSeoMeta({
     title: "Création d'une recette - Bread on Board"
   });
 
   const title = ref('');
-  let image = null;
+  const image = ref(null);
   const ingredients = ref('');
-  
-  const showCorrect = ref(false);
-  const showSprinner = ref(false);
+  const showSpinner = ref(false);
 
   const createRecipe = async () => {
-    showSprinner.value = true;
+    showSpinner.value = true;
     let form = new FormData();
     form.append("title", title.value);
-    form.append("image", image);
+    form.append("image", image.value);
     form.append("ingredients", ingredients.value);
 
     const { data: recipeId, error } = await useFetch("http://localhost:9001/api/recipe/create", {
       method: 'POST',
       body: form,
-
       onResponse({ request, response, options }) {
         let recipeId = response._data;
-        showCorrect.value = true;
-        showSprinner.value = false;
-        console.log(recipeId);
       },
-
       onResponseError({ request, response, options }) {
-        showSprinner.value = false;
+        showSpinner.value = false;
       }
     });
   };
 
   const fileSelected = (event) => {
-    image = event.target.files[0];
+    image.value = event.target.files[0];
   };
+
+  const imgURL = computed(() => URL.createObjectURL(image.value));
 </script>

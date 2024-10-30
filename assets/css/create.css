@@ -1,0 +1,13 @@
+.image-enter-active,
+.image-leave-active,
+.spinner-enter-active,
+.spinner-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.image-enter-from,
+.image-leave-to,
+.spinner-enter-from,
+.spinner-leave-to {
+  opacity: 0;
+}
