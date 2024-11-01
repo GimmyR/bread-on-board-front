@@ -16,7 +16,12 @@
             <NavIcon to="/recipe/create" title="Créer une recette" icon="plus-lg"/>
           </li>
           <li class="nav-item">
-            <NavIcon to="#" title="Connexion" icon="person-circle"/>
+            <template v-if="username == null">
+              <NavIcon to="/login" title="Connexion" icon="person-circle"/>
+            </template>
+            <template v-else>
+              <NavIcon to="#" :title="username" icon="person-circle" @click="logOut"/>
+            </template>
           </li>
         </ul>
       </div>
@@ -25,6 +30,28 @@
   <SearchModal/>
 </template>
 
-<script lang="ts" setup>
+<script setup>
   import '~/assets/css/Header.css';
+
+  const username = useState("username", () => null);
+
+  const logOut = () => {
+    let form = new FormData();
+    form.append("token", localStorage.getItem("token"));
+
+    $fetch("http://localhost:9001/api/account/log-out", {
+      method: 'POST',
+      body: form,
+      onResponse({ request, response, options }) {
+        if(response.status == 200) {
+          localStorage.removeItem("token");
+          username.value = null;
+        }
+      }
+    });
+  };
+
+  onMounted(() => {
+    fetchUsername(localStorage.getItem("token"), username);
+  });
 </script>
