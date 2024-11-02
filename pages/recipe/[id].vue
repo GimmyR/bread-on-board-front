@@ -23,6 +23,11 @@
 
 <script setup>
   import '~/assets/css/recipe.css';
+  
+  useSeoMeta({
+    title: 'Détails d\'une recette - Bread on Board'
+  });
+
   const route = useRoute();
   const { data: recipe, error } = await useFetch("http://localhost:9001/api/recipe/get-one/" + route.params.id);
   const { data: steps } = await useFetch("http://localhost:9001/api/recipe-step/get-all/" + route.params.id);
