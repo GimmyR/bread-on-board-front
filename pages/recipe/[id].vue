@@ -1,6 +1,6 @@
 <template>
-  <div class="container-fluid container-lg bg-light py-5">
-    <div v-if="recipe != null" class="d-flex flex-column align-items-center my-5 px-3">
+  <div class="container-fluid container-lg bg-light">
+    <div v-if="recipe != null" class="d-flex flex-column align-items-center mt-5 py-5 px-3">
       <h1 class="text-success mb-1">{{ recipe.title }}</h1>
       <h3 class="fs-5 mb-5">
         par <NuxtLink :to="'/account/' + recipe.accountId" class="text-light-green text-decoration-none">Quelqu'un</NuxtLink>
@@ -17,8 +17,8 @@
         </ol>
       </div>
     </div>
-    <div v-else>
-      <h1 v-if="error != null">Recipe not found</h1>
+    <div v-else class="container-fluid bg-light vh-100">
+      <RecipeNotFound v-if="error != null"/>
     </div>
   </div>
 </template>
