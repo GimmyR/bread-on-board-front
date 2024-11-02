@@ -1,0 +1,9 @@
+.alert-enter-active,
+.alert-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.alert-enter-from,
+.alert-leave-to {
+  opacity: 0;
+}

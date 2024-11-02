@@ -2,6 +2,11 @@
   <div class="container-fluid container-lg pt-5">
     <div class="d-flex flex-row justify-content-center">
       <form @submit.prevent="logIn" class="d-flex flex-column align-items-center col-12 col-lg-8 mt-5 py-5 px-3 px-lg-0 bg-light">
+        <Transition name="alert">
+          <div class="alert alert-danger col-12 col-lg-6 mb-4" role="alert" v-if="errorMessage != null">
+            {{ errorMessage }}
+          </div>
+        </Transition>
         <div class="col-12 col-lg-6 mb-3">
           <label for="username" class="form-label text-success">Nom d'utilisateur</label>
           <input type="text" class="form-control" v-model="account.username"/>
@@ -19,6 +24,8 @@
 </template>
 
 <script setup>
+  import '~/assets/css/login.css';
+
   useSeoMeta({
     title: 'Connexion - Bread on Board'
   });
@@ -27,6 +34,8 @@
     username: '',
     password: ''
   });
+
+  const errorMessage = ref(null);
 
   const username = useState("username");
   const router = useRouter();
@@ -44,7 +53,7 @@
           localStorage.setItem("token", response._data);
           fetchUsername(response._data, username);
           router.back();
-        } else console.log("ERROR: ", response._data);
+        } else errorMessage.value = response._data;
       }
     });
   };
