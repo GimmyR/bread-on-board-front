@@ -67,36 +67,38 @@
     saveButton.value.color = "secondary";
     saveButton.value.disabled = true;
     let form = new FormData();
+    form.append("token", localStorage.getItem("token"));
     form.append("title", title.value);
     form.append("image", image.value);
     form.append("ingredients", ingredients.value);
 
-    console.log(steps.value);
-
-    useFetch("http://localhost:9001/api/recipe/create", {
+    $fetch("http://localhost:9001/api/recipe/create", {
       method: 'POST',
       body: form,
       onResponse({ request, response, options }) {
-        saveAllSteps(response._data);
-      },
-      onResponseError({ request, response, options }) {
-        showSpinner.value = false;
-        saveButton.value.color = "success";
-        saveButton.value.disabled = false;
+        if(response.status == 200)
+          saveAllSteps(response._data);
+        else {
+          showSpinner.value = false;
+          saveButton.value.color = "success";
+          saveButton.value.disabled = false;
+        }
       }
     });
   };
 
   const saveAllSteps = (recipeId) => {
-    useFetch("http://localhost:9001/api/recipe-step/save-all", {
+    $fetch("http://localhost:9001/api/recipe-step/save-all", {
       method: 'POST',
       body: {
         recipeId: recipeId,
         steps: steps.value
       },
       onResponse({ request, response, options }) {
-        const router = useRouter();
-        router.push("/recipe/" + recipeId);
+        if(response.status == 200) {
+          const router = useRouter();
+          router.push("/recipe/" + recipeId);
+        }
       }
     });
   };
