@@ -1,7 +1,6 @@
 <template>
   <div class="container-fluid container-lg bg-light py-5">
-    <h1 v-if="error">Recipe not found</h1>
-    <div v-else class="d-flex flex-column align-items-center my-5 px-3">
+    <div v-if="recipe != null" class="d-flex flex-column align-items-center my-5 px-3">
       <h1 class="text-success mb-1">{{ recipe.title }}</h1>
       <h3 class="fs-5 mb-5">
         par <NuxtLink :to="'/account/' + recipe.accountId" class="text-light-green text-decoration-none">Quelqu'un</NuxtLink>
@@ -18,6 +17,9 @@
         </ol>
       </div>
     </div>
+    <div v-else>
+      <h1 v-if="error != null">Recipe not found</h1>
+    </div>
   </div>
 </template>
 
@@ -29,6 +31,32 @@
   });
 
   const route = useRoute();
-  const { data: recipe, error } = await useFetch("http://localhost:9001/api/recipe/get-one/" + route.params.id);
-  const { data: steps } = await useFetch("http://localhost:9001/api/recipe-step/get-all/" + route.params.id);
+  const recipe = ref(null);
+  const steps = ref([]);
+  const error = ref(null);
+
+  onMounted(() => {
+    fetchRecipe();
+  });
+
+  const fetchRecipe = () => {
+    $fetch("http://localhost:9001/api/recipe/get-one/" + route.params.id, {
+      method: 'GET',
+      onResponse({ request, response, options }) {
+        if(response.status == 200) {
+          recipe.value = response._data;
+          fetchSteps();
+        } else error.value = response._data;
+      }
+    });
+  };
+
+  const fetchSteps = () => {
+    $fetch("http://localhost:9001/api/recipe-step/get-all/" + route.params.id, {
+      method: 'GET',
+      onResponse({ request, response, options }) {
+        steps.value = response._data;
+      }
+    });
+  };
 </script>
