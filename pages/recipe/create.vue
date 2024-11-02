@@ -1,6 +1,6 @@
 <template>
-  <div class="container-fluid container-lg bg-light py-5 mt-5" style="min-height: 800px;">
-    <form class="d-flex flex-column col-12 col-lg-6 mx-auto mt-0 mt-lg-5" @submit.prevent="createRecipe">
+  <div class="container-fluid container-lg bg-light py-5 mt-5">
+    <form class="d-flex flex-column col-12 col-lg-6 mx-auto mt-0 mt-lg-5 mb-0 mb-lg-5" @submit.prevent="createRecipe">
       <div class="mb-4">
         <label for="title" class="form-label text-success fw-bold">Titre de la recette</label>
         <input type="text" class="form-control" v-model="title">
@@ -30,6 +30,11 @@
         </label>
         <input type="text" class="form-control" v-model="step.text"/>
       </div>
+      <Transition name="alert">
+        <div class="alert alert-danger mb-4" role="alert" v-if="errorMessage != null">
+          {{ errorMessage }}
+        </div>
+      </Transition>
       <div class="d-flex flex-row justify-content-end align-items-center">
         <Transition name="spinner">
           <Spinner spinner="grow" v-show="showSpinner" text-color="secondary" class="me-1" sm/>
@@ -49,6 +54,7 @@
     title: "Création d'une recette - Bread on Board"
   });
 
+  const router = useRouter();
   const title = ref('');
   const image = ref(null);
   const ingredients = ref('');
@@ -62,29 +68,30 @@
     disabled: false
   });
 
-  const createRecipe = () => {
-    showSpinner.value = true;
-    saveButton.value.color = "secondary";
-    saveButton.value.disabled = true;
-    let form = new FormData();
-    form.append("token", localStorage.getItem("token"));
-    form.append("title", title.value);
-    form.append("image", image.value);
-    form.append("ingredients", ingredients.value);
+  const errorMessage = ref(null);
 
-    $fetch("http://localhost:9001/api/recipe/create", {
-      method: 'POST',
-      body: form,
-      onResponse({ request, response, options }) {
-        if(response.status == 200)
-          saveAllSteps(response._data);
-        else {
-          showSpinner.value = false;
-          saveButton.value.color = "success";
-          saveButton.value.disabled = false;
+  const createRecipe = () => {
+    if(localStorage.getItem("token") != null) {
+      startSaveAnimation();
+      let form = new FormData();
+      form.append("token", localStorage.getItem("token"));
+      form.append("title", title.value);
+      form.append("image", image.value);
+      form.append("ingredients", ingredients.value);
+
+      $fetch("http://localhost:9001/api/recipe/create", {
+        method: 'POST',
+        body: form,
+        onResponse({ request, response, options }) {
+          if(response.status == 200)
+            saveAllSteps(response._data);
+          else {
+            endSaveAnimation();
+            errorMessage.value = response._data;
+          }
         }
-      }
-    });
+      });
+    } else router.push("/login");
   };
 
   const saveAllSteps = (recipeId) => {
@@ -95,9 +102,11 @@
         steps: steps.value
       },
       onResponse({ request, response, options }) {
-        if(response.status == 200) {
-          const router = useRouter();
+        if(response.status == 200)
           router.push("/recipe/" + recipeId);
+        else {
+          endSaveAnimation();
+          errorMessage.value = response._data;
         }
       }
     });
@@ -119,5 +128,17 @@
 
   const getNowTimestamp = () => {
     return Date.now();
+  };
+
+  const startSaveAnimation = () => {
+    showSpinner.value = true;
+    saveButton.value.color = "secondary";
+    saveButton.value.disabled = true;
+  };
+
+  const endSaveAnimation = () => {
+    showSpinner.value = false;
+    saveButton.value.color = "success";
+    saveButton.value.disabled = false;
   };
 </script>
