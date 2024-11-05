@@ -3,11 +3,11 @@
     <form class="d-flex flex-column col-12 col-lg-6 mx-auto mt-0 mt-lg-5 mb-0 mb-lg-5" @submit.prevent="createRecipe">
       <div class="mb-4">
         <label for="title" class="form-label text-success fw-bold">Titre de la recette</label>
-        <input type="text" class="form-control" v-model="title">
+        <input type="text" class="form-control" v-model="title" id="title">
       </div>
       <div class="mb-4">
         <label for="image" class="form-label text-success fw-bold">Image de la recette</label>
-        <input type="file" class="form-control" accept="image/*" @change="fileSelected">
+        <input type="file" class="form-control" accept="image/*" @change="fileSelected" id="image">
         <Transition name="image">
           <template v-if="image != null">
             <img :src="imgURL" class="img-fluid mt-4"/>
@@ -16,19 +16,19 @@
       </div>
       <div class="mb-4">
         <label for="ingredients" class="form-label text-success fw-bold">Les ingrédients de la recette</label>
-        <input type="text" class="form-control" v-model="ingredients"/>
+        <input type="text" class="form-control" v-model="ingredients" id="ingredients"/>
       </div>
       <div class="d-flex flex-column mb-4" v-for="(step, index) in steps" :key="getNowTimestamp">
-        <label :for="`step-${index + 1}`" class="form-label text-success fw-bold">
-          <a href="#" @click="addStepRightAfter(index)" class="me-1" title="Ajouter une étape juste après">
+        <label :for="`step-${index + 1}`" class="d-flex flex-row align-items-center form-label text-success fw-bold">
+          <b-button @click="addStepRightAfter(index)" color="outline-light" class="border-0 px-0 me-2" title="Ajouter une étape juste après">
             <BIcon icon="bi:plus-lg" color="primary"/>
-          </a>
+          </b-button>
           Etape #{{ index + 1 }}
-          <a href="#" class="ms-1" title="Supprimer cette étape" @click="removeStepAt(index)">
+          <b-button @click="removeStepAt(index)" color="outline-light" class="border-0 px-0 ms-2" title="Ajouter une étape juste après">
             <BIcon icon="bi:trash" color="primary"/>
-          </a>
+          </b-button>
         </label>
-        <input type="text" class="form-control" v-model="step.text"/>
+        <input type="text" class="form-control" v-model="step.text" :id="`step-${index + 1}`"/>
       </div>
       <Transition name="alert">
         <div class="alert alert-danger mb-4" role="alert" v-if="errorMessage != null">
