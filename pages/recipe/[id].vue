@@ -1,7 +1,14 @@
 <template>
   <div class="container-fluid container-lg bg-light">
     <div v-if="recipe != null" class="d-flex flex-column align-items-center mt-5 py-5 px-3">
-      <h1 class="text-success mb-1">{{ recipe.title }}</h1>
+      <div class="d-flex flex-row align-items-center">
+        <h1 class="text-success mb-1">
+          {{ recipe.title }}
+        </h1>
+        <NuxtLink :to="`/recipe/edit/${recipe.id}`" class="ms-3">
+          <BIcon icon="bi:pencil-square" class="fs-5"/>
+        </NuxtLink>
+      </div>
       <h3 class="fs-5 mb-5">
         par <NuxtLink :to="'/account/' + recipe.accountId" class="text-light-green text-decoration-none">Quelqu'un</NuxtLink>
       </h3>

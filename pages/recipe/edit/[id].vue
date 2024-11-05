@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid container-lg bg-light py-5 mt-5">
-    <form class="d-flex flex-column col-12 col-lg-6 mx-auto mt-0 mt-lg-5 mb-0 mb-lg-5" @submit.prevent="createRecipe">
+    <form class="d-flex flex-column col-12 col-lg-6 mx-auto mt-0 mt-lg-5 mb-0 mb-lg-5" @submit.prevent="editRecipe">
       <div class="mb-4">
         <label for="title" class="form-label text-success fw-bold">Titre de la recette</label>
         <input type="text" class="form-control" v-model="title" id="title">
@@ -16,7 +16,7 @@
       </div>
       <div class="mb-4">
         <label for="ingredients" class="form-label text-success fw-bold">Les ingrédients de la recette</label>
-        <input type="text" class="form-control" v-model="ingredients" id="ingredients"/>
+        <textarea class="form-control" v-model="ingredients" id="ingredients"></textarea>
       </div>
       <div class="d-flex flex-column mb-4" v-for="(step, index) in steps" :key="getNowTimestamp">
         <label :for="`step-${index + 1}`" class="d-flex flex-row align-items-center form-label text-success fw-bold">
@@ -28,7 +28,7 @@
             <BIcon icon="bi:trash" color="primary"/>
           </b-button>
         </label>
-        <input type="text" class="form-control" v-model="step.text" :id="`step-${index + 1}`"/>
+        <textarea class="form-control" v-model="step.text" :id="`step-${index + 1}`"></textarea>
       </div>
       <Transition name="alert">
         <div class="alert alert-danger mb-4" role="alert" v-if="errorMessage != null">
@@ -48,19 +48,19 @@
 </template>
 
 <script setup>
-  import '~/assets/css/create.css';
+  import '~/assets/css/edit.css';
   
   useSeoMeta({
     title: "Création d'une recette - Bread on Board"
   });
 
+  const route = useRoute();
   const router = useRouter();
   const title = ref('');
   const image = ref(null);
+  const imgURL = ref(null);
   const ingredients = ref('');
-  const steps = ref([
-    { text: '' }
-  ]);
+  const steps = ref([]);
 
   const showSpinner = ref(false);
   const saveButton = ref({
@@ -70,7 +70,33 @@
 
   const errorMessage = ref(null);
 
-  const createRecipe = () => {
+  onMounted(() => {
+    $fetch("http://localhost:9001/api/recipe/get-one/" + route.params.id, {
+      method: 'GET',
+      onResponse({ request, response, options }) {
+        if(response.status == 200) {
+          title.value = response._data.title;
+          image.value = new File([], response._data.image);
+          imgURL.value = "http://localhost:9001/images/" + response._data.image;
+          ingredients.value = response._data.ingredients;
+          fetchSteps();
+        }
+      }
+    });
+  });
+
+  const fetchSteps = () => {
+    $fetch("http://localhost:9001/api/recipe-step/get-all/" + route.params.id, {
+      method: 'GET',
+      onResponse({ request, response, options }) {
+        if(response.status == 200) {
+          steps.value = response._data;
+        }
+      }
+    });
+  };
+
+  const editRecipe = () => {
     if(localStorage.getItem("token") != null) {
       startSaveAnimation();
       let form = new FormData();
@@ -79,7 +105,7 @@
       form.append("image", image.value);
       form.append("ingredients", ingredients.value);
 
-      $fetch("http://localhost:9001/api/recipe/create", {
+      $fetch("http://localhost:9001/api/recipe/edit/" + route.params.id, {
         method: 'POST',
         body: form,
         onResponse({ request, response, options }) {
@@ -87,6 +113,7 @@
             saveAllSteps(response._data);
           else {
             endSaveAnimation();
+            console.log(response._data);
             errorMessage.value = response._data;
           }
         }
@@ -115,9 +142,8 @@
 
   const fileSelected = (event) => {
     image.value = event.target.files[0];
+    imgURL.value = URL.createObjectURL(image.value);
   };
-
-  const imgURL = computed(() => URL.createObjectURL(image.value));
 
   const addStepRightAfter = (index) => {
     steps.value.splice(index + 1, 0, { text: '' });
