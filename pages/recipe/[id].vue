@@ -5,8 +5,11 @@
         <h1 class="text-success mb-1">
           {{ recipe.title }}
         </h1>
-        <NuxtLink :to="`/recipe/edit/${recipe.id}`" class="ms-3">
+        <NuxtLink :to="`/recipe/edit/${recipe.id}`" class="ms-3" v-if="isConnectedAndAuthor">
           <BIcon icon="bi:pencil-square" class="fs-5"/>
+        </NuxtLink>
+        <NuxtLink @click="addToFavorite" class="ms-3" v-else>
+          <BIcon :icon="favorite" class="fs-5"/>
         </NuxtLink>
       </div>
       <h3 class="fs-5 mb-5">
@@ -38,12 +41,28 @@
   });
 
   const route = useRoute();
+  const router = useRouter();
   const recipe = ref(null);
   const steps = ref([]);
   const error = ref(null);
+  const favorite = ref('bi:suit-heart');
+  const isConnectedAndAuthor = ref(false);
 
   onMounted(() => {
     fetchRecipe();
+    if(localStorage.getItem("token") != null) {
+      let form = new FormData();
+      form.append("token", localStorage.getItem("token"));
+      $fetch("http://localhost:9001/api/recipe/author/" + route.params.id, {
+        method: 'POST',
+        body: form,
+        onResponse({ request, response, options }) {
+          if(response.status == 200)
+            isConnectedAndAuthor.value = true;
+          else console.log(response._data);
+        }
+      });
+    }
   });
 
   const fetchRecipe = () => {
@@ -65,5 +84,11 @@
         steps.value = response._data;
       }
     });
+  };
+
+  const addToFavorite = () => {
+    if(localStorage.getItem("token") != null && isConnectedAndAuthor.value == false) {
+      // ajouter vraiment aux favoris
+    } else router.push("/login");
   };
 </script>
