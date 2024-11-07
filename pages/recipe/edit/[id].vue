@@ -39,6 +39,9 @@
         <Transition name="spinner">
           <Spinner spinner="grow" v-show="showSpinner" text-color="secondary" class="me-1" sm/>
         </Transition>
+        <b-button color="danger" type="button" class="ms-3" @click="deleteRecipe">
+          Supprimer
+        </b-button>
         <b-button :color="saveButton.color" type="submit" class="ms-3" :class="{disabled: saveButton.disabled}">
           Enregistrer
         </b-button>
@@ -138,6 +141,23 @@
         }
       }
     });
+  };
+
+  const deleteRecipe = () => {
+    if(localStorage.getItem("token") != null) {
+      let form = new FormData();
+      form.append("token", localStorage.getItem("token"));
+
+      $fetch("http://localhost:9001/api/recipe/delete/" + route.params.id, {
+        method: 'POST',
+        body: form,
+        onResponse({ request, response, options }) {
+          if(response.status == 200)
+            router.push("/");
+          else console.log(response._data);
+        }
+      });
+    } else router.push("/login");
   };
 
   const fileSelected = (event) => {
