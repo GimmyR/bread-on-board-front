@@ -16,11 +16,11 @@
             <NavIcon to="/recipe/create" title="Créer une recette" icon="plus-lg"/>
           </li>
           <li class="nav-item">
-            <template v-if="username == null">
+            <template v-if="jwtPayload == null">
               <NavIcon to="/login" title="Connexion" icon="person-circle"/>
             </template>
             <template v-else>
-              <NavIcon to="#" :title="username" icon="person-circle" @click="logOut"/>
+              <NavIcon to="#" :title="jwtPayload.sub" icon="person-circle" @click="logOut"/>
             </template>
           </li>
         </ul>
@@ -33,25 +33,14 @@
 <script setup>
   import '~/assets/css/Header.css';
 
-  const username = useState("username", () => null);
+  const jwtPayload = useState("jwt-payload", () => null);
 
   const logOut = () => {
-    let form = new FormData();
-    form.append("token", localStorage.getItem("token"));
-
-    $fetch("http://localhost:9001/api/account/log-out", {
-      method: 'POST',
-      body: form,
-      onResponse({ request, response, options }) {
-        if(response.status == 200) {
-          localStorage.removeItem("token");
-          username.value = null;
-        }
-      }
-    });
+    localStorage.removeItem("access-token");
+    jwtPayload.value = null;
   };
 
   onMounted(() => {
-    fetchUsername(localStorage.getItem("token"), username);
+    decodeJwtPayload(localStorage.getItem("access-token"), jwtPayload);
   });
 </script>

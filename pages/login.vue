@@ -37,7 +37,7 @@
 
   const errorMessage = ref(null);
 
-  const username = useState("username");
+  const jwtPayload = useState("jwt-payload");
   const router = useRouter();
 
   const logIn = () => {
@@ -50,8 +50,8 @@
       body: form,
       onResponse({ request, response, options }) {
         if(response.status == 200) {
-          localStorage.setItem("token", response._data);
-          fetchUsername(response._data, username);
+          localStorage.setItem("access-token", response._data);
+          decodeJwtPayload(response._data, jwtPayload);
           router.back();
         } else errorMessage.value = response._data;
       }
