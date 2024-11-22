@@ -100,16 +100,18 @@
   };
 
   const editRecipe = () => {
-    if(localStorage.getItem("token") != null) {
+    if(localStorage.getItem("access-token") != null) {
       startSaveAnimation();
       let form = new FormData();
-      form.append("token", localStorage.getItem("token"));
       form.append("title", title.value);
       form.append("image", image.value);
       form.append("ingredients", ingredients.value);
 
       $fetch("http://localhost:9001/api/recipe/edit/" + route.params.id, {
         method: 'POST',
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("access-token")
+        },
         body: form,
         onResponse({ request, response, options }) {
           if(response.status == 200)
@@ -127,8 +129,10 @@
   const saveAllSteps = (recipeId) => {
     $fetch("http://localhost:9001/api/recipe-step/save-all", {
       method: 'POST',
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("access-token")
+      },
       body: {
-        token: localStorage.getItem("token"),
         recipeId: recipeId,
         steps: steps.value
       },
@@ -144,13 +148,12 @@
   };
 
   const deleteRecipe = () => {
-    if(localStorage.getItem("token") != null) {
-      let form = new FormData();
-      form.append("token", localStorage.getItem("token"));
-
+    if(localStorage.getItem("access-token") != null) {
       $fetch("http://localhost:9001/api/recipe/delete/" + route.params.id, {
-        method: 'POST',
-        body: form,
+        method: 'GET',
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("access-token")
+        },
         onResponse({ request, response, options }) {
           if(response.status == 200)
             router.push("/");
