@@ -9,7 +9,7 @@
         <label for="image" class="form-label text-success fw-bold">Image de la recette</label>
         <input type="file" class="form-control" accept="image/*" @change="fileSelected" id="image">
         <Transition name="image">
-          <template v-if="image != null">
+          <template v-if="image != null && image.name != ''">
             <img :src="imgURL" class="img-fluid mt-4"/>
           </template>
         </Transition>
@@ -56,7 +56,7 @@
 
   const router = useRouter();
   const title = ref('');
-  const image = ref(null);
+  const image = ref(new File([], ""));
   const ingredients = ref('');
   const steps = ref([
     { text: '' }
@@ -71,19 +71,21 @@
   const errorMessage = ref(null);
 
   const createRecipe = () => {
-    if(localStorage.getItem("token") != null) {
+    if(localStorage.getItem("access-token") != null) {
       startSaveAnimation();
       let form = new FormData();
-      form.append("token", localStorage.getItem("token"));
       form.append("title", title.value);
       form.append("image", image.value);
       form.append("ingredients", ingredients.value);
 
       $fetch("http://localhost:9001/api/recipe/create", {
         method: 'POST',
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("access-token")
+        },
         body: form,
         onResponse({ request, response, options }) {
-          if(response.status == 200)
+          if(response.status == 200 || response.status == 500)
             saveAllSteps(response._data);
           else {
             endSaveAnimation();
@@ -97,8 +99,10 @@
   const saveAllSteps = (recipeId) => {
     $fetch("http://localhost:9001/api/recipe-step/save-all", {
       method: 'POST',
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("access-token")
+      },
       body: {
-        token: localStorage.getItem("token"),
         recipeId: recipeId,
         steps: steps.value
       },
