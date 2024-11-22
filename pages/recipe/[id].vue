@@ -50,12 +50,12 @@
 
   onMounted(() => {
     fetchRecipe();
-    if(localStorage.getItem("token") != null) {
-      let form = new FormData();
-      form.append("token", localStorage.getItem("token"));
+    if(localStorage.getItem("access-token") != null) {
       $fetch("http://localhost:9001/api/recipe/author/" + route.params.id, {
-        method: 'POST',
-        body: form,
+        method: 'GET',
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("access-token")
+        },
         onResponse({ request, response, options }) {
           if(response.status == 200)
             isConnectedAndAuthor.value = true;
@@ -87,7 +87,7 @@
   };
 
   const addToFavorite = () => {
-    if(localStorage.getItem("token") != null && isConnectedAndAuthor.value == false) {
+    if(localStorage.getItem("access-token") != null && isConnectedAndAuthor.value == false) {
       // ajouter vraiment aux favoris
     } else router.push("/login");
   };
