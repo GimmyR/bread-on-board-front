@@ -1,6 +1,11 @@
 <template>
   <div class="container-fluid container-lg bg-light py-5 mt-5">
     <form class="d-flex flex-column col-12 col-lg-6 mx-auto mt-0 mt-lg-5 mb-0 mb-lg-5" @submit.prevent="createRecipe">
+      <Transition name="alert">
+        <div class="alert alert-danger mb-4" role="alert" v-if="errorMessage != null">
+          {{ errorMessage }}
+        </div>
+      </Transition>
       <div class="mb-4">
         <label for="title" class="form-label text-success fw-bold">Titre de la recette</label>
         <input type="text" class="form-control" v-model="title" id="title">
@@ -30,11 +35,6 @@
         </label>
         <input type="text" class="form-control" v-model="step.text" :id="`step-${index + 1}`"/>
       </div>
-      <Transition name="alert">
-        <div class="alert alert-danger mb-4" role="alert" v-if="errorMessage != null">
-          {{ errorMessage }}
-        </div>
-      </Transition>
       <div class="d-flex flex-row justify-content-end align-items-center">
         <Transition name="spinner">
           <Spinner spinner="grow" v-show="showSpinner" text-color="secondary" class="me-1" sm/>
