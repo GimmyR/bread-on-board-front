@@ -9,5 +9,7 @@
 </template>
 
 <script setup>
-  const { data: recipes } = await useFetch('http://localhost:9001/api/recipe/get-all/');
+  const runtimeConfig = useRuntimeConfig();
+
+  const { data: recipes } = await useFetch(runtimeConfig.public.apiURL + '/api/recipe/get-all/');
 </script>

@@ -72,15 +72,16 @@
   });
 
   const errorMessage = ref(null);
+  const runtimeConfig = useRuntimeConfig();
 
   onMounted(() => {
-    $fetch("http://localhost:9001/api/recipe/get-one/" + route.params.id, {
+    $fetch(runtimeConfig.public.apiURL + "/api/recipe/get-one/" + route.params.id, {
       method: 'GET',
       onResponse({ request, response, options }) {
         if(response.status == 200) {
           title.value = response._data.title;
           image.value = new File([], response._data.image);
-          imgURL.value = "http://localhost:9001/images/" + response._data.image;
+          imgURL.value = runtimeConfig.public.apiURL + "/images/" + response._data.image;
           ingredients.value = response._data.ingredients;
           fetchSteps();
         }
@@ -89,7 +90,7 @@
   });
 
   const fetchSteps = () => {
-    $fetch("http://localhost:9001/api/recipe-step/get-all/" + route.params.id, {
+    $fetch(runtimeConfig.public.apiURL + "/api/recipe-step/get-all/" + route.params.id, {
       method: 'GET',
       onResponse({ request, response, options }) {
         if(response.status == 200) {
@@ -107,7 +108,7 @@
       form.append("image", image.value);
       form.append("ingredients", ingredients.value);
 
-      $fetch("http://localhost:9001/api/recipe/edit/" + route.params.id, {
+      $fetch(runtimeConfig.public.apiURL + "/api/recipe/edit/" + route.params.id, {
         method: 'POST',
         headers: {
           "Authorization": "Bearer " + localStorage.getItem("access-token")
@@ -127,7 +128,7 @@
   };
 
   const saveAllSteps = (recipeId) => {
-    $fetch("http://localhost:9001/api/recipe-step/save-all", {
+    $fetch(runtimeConfig.public.apiURL + "/api/recipe-step/save-all", {
       method: 'POST',
       headers: {
         "Authorization": "Bearer " + localStorage.getItem("access-token")
@@ -149,7 +150,7 @@
 
   const deleteRecipe = () => {
     if(localStorage.getItem("access-token") != null) {
-      $fetch("http://localhost:9001/api/recipe/delete/" + route.params.id, {
+      $fetch(runtimeConfig.public.apiURL + "/api/recipe/delete/" + route.params.id, {
         method: 'GET',
         headers: {
           "Authorization": "Bearer " + localStorage.getItem("access-token")

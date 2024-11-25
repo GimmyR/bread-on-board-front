@@ -5,5 +5,11 @@ export default defineNuxtConfig({
   app: {
     pageTransition: { name: 'page', mode: 'out-in' }
   },
-  modules: ['usebootstrap', 'nuxt-bootstrap-icons']
+  modules: ['usebootstrap', 'nuxt-bootstrap-icons'],
+
+  runtimeConfig: {
+    public: {
+      apiURL: "http://localhost:9001"
+    }
+  }
 })

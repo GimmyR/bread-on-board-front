@@ -21,11 +21,12 @@
 <script setup>
   const search = ref('');
   const recipes = ref([]);
+  const runtimeConfig = useRuntimeConfig();
   
   const fetchRecipes = () => {
     let form = new FormData();
     form.append("search", search.value);
-    $fetch("http://localhost:9001/api/recipe/search/", {
+    $fetch(runtimeConfig.public.apiURL + "/api/recipe/search/", {
       method: 'POST',
       body: form,
       onResponse({ request, response, options }) {

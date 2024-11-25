@@ -70,6 +70,7 @@
   });
 
   const errorMessage = ref(null);
+  const runtimeConfig = useRuntimeConfig();
 
   onMounted(() => {
     let key = "title-for-create";
@@ -87,7 +88,7 @@
       form.append("image", image.value);
       form.append("ingredients", ingredients.value);
 
-      $fetch("http://localhost:9001/api/recipe/create", {
+      $fetch(runtimeConfig.public.apiURL + "/api/recipe/create", {
         method: 'POST',
         headers: {
           "Authorization": "Bearer " + localStorage.getItem("access-token")
@@ -106,7 +107,7 @@
   };
 
   const saveAllSteps = (recipeId) => {
-    $fetch("http://localhost:9001/api/recipe-step/save-all", {
+    $fetch(runtimeConfig.public.apiURL + "/api/recipe-step/save-all", {
       method: 'POST',
       headers: {
         "Authorization": "Bearer " + localStorage.getItem("access-token")

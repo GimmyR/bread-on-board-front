@@ -39,13 +39,14 @@
 
   const jwtPayload = useState("jwt-payload");
   const router = useRouter();
+  const runtimeConfig = useRuntimeConfig();
 
   const logIn = () => {
     let form = new FormData();
     form.append("username", account.value.username);
     form.append("password", account.value.password);
 
-    $fetch("http://localhost:9001/api/account/log-in", {
+    $fetch(runtimeConfig.public.apiURL + "/api/account/log-in", {
       method: 'POST',
       body: form,
       onResponse({ request, response, options }) {
