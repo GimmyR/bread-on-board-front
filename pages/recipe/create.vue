@@ -54,8 +54,9 @@
     title: "Création d'une recette - Bread on Board"
   });
 
+  const route = useRoute();
   const router = useRouter();
-  const title = ref('');
+  const title = ref("");
   const image = ref(new File([], ""));
   const ingredients = ref('');
   const steps = ref([
@@ -69,6 +70,14 @@
   });
 
   const errorMessage = ref(null);
+
+  onMounted(() => {
+    let key = "title-for-create";
+    if(localStorage.getItem(key) != null) {
+      title.value = localStorage.getItem(key);
+      localStorage.removeItem(key);
+    }
+  });
 
   const createRecipe = () => {
     if(localStorage.getItem("access-token") != null) {
