@@ -3,7 +3,7 @@
     <ModalDialog fullscreen="md-down">
       <ModalContent rounded-size="1">
         <ModalHeader>
-          <input type="text" class="form-control me-1" placeholder="Rechercher une recette" v-model="search" @keypress.enter="fetchRecipes">
+          <input type="text" class="form-control me-1" placeholder="Rechercher une recette" v-model="search">
           <CloseButton dismiss="modal" />
         </ModalHeader>
         <ModalBody class="px-4" style="height: 750px;">
@@ -34,4 +34,8 @@
       }
     });
   };
+
+  watch(search, (newValue, oldValue) => {
+    fetchRecipes();
+  }, {immediate: true});
 </script>
