@@ -3,7 +3,7 @@
     <NuxtLoadingIndicator color="#27AAFF"/>
     <NuxtRouteAnnouncer />
     <Header/>
-    <NuxtPage />
+    <NuxtPage :keepalive="true" />
   </div>
 </template>
 
