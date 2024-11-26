@@ -13,6 +13,6 @@
     recipe: Object
   });
 
-  const runtimeConfig = useRuntimeConfig();
-  const imgSrc = ref(runtimeConfig.public.apiURL + "/images/" + props.recipe.image);
+  const appConfig = useAppConfig();
+  const imgSrc = ref(appConfig.apiURL + "/images/" + props.recipe.image);
 </script>

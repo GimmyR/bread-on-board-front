@@ -15,7 +15,7 @@
       <h3 class="fs-5 mb-5">
         par <NuxtLink :to="'/account/' + recipe.accountId" class="text-light-green text-decoration-none">Quelqu'un</NuxtLink>
       </h3>
-      <img :src="runtimeConfig.public.apiURL + '/images/' + recipe.image" :alt="recipe.title" class="img-fluid col-12 col-lg-4 mb-5">
+      <img :src="appConfig.apiURL + '/images/' + recipe.image" :alt="recipe.title" class="img-fluid col-12 col-lg-4 mb-5">
       <div class="d-flex flex-column col-12 col-lg-8 mt-2 mb-3">
         <h2 class="text-success text-center text-lg-start text-decoration-underline fs-4 mb-3">Les ingrédients</h2>
         <p class="ps-0 ps-lg-3">{{ recipe.ingredients }}</p>
@@ -47,12 +47,12 @@
   const error = ref(null);
   const favorite = ref('bi:suit-heart');
   const isConnectedAndAuthor = ref(false);
-  const runtimeConfig = useRuntimeConfig();
+  const appConfig = useAppConfig();
 
   onMounted(() => {
     fetchRecipe();
     if(localStorage.getItem("access-token") != null) {
-      $fetch(runtimeConfig.public.apiURL + "/api/recipe/author/" + route.params.id, {
+      $fetch(appConfig.apiURL + "/api/recipe/author/" + route.params.id, {
         method: 'GET',
         headers: {
           "Authorization": "Bearer " + localStorage.getItem("access-token")
@@ -67,7 +67,7 @@
   });
 
   const fetchRecipe = () => {
-    $fetch(runtimeConfig.public.apiURL + "/api/recipe/get-one/" + route.params.id, {
+    $fetch(appConfig.apiURL + "/api/recipe/get-one/" + route.params.id, {
       method: 'GET',
       onResponse({ request, response, options }) {
         if(response.status == 200) {
@@ -79,7 +79,7 @@
   };
 
   const fetchSteps = () => {
-    $fetch(runtimeConfig.public.apiURL + "/api/recipe-step/get-all/" + route.params.id, {
+    $fetch(appConfig.apiURL + "/api/recipe-step/get-all/" + route.params.id, {
       method: 'GET',
       onResponse({ request, response, options }) {
         steps.value = response._data;
