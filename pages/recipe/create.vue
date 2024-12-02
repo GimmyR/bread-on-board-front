@@ -33,7 +33,7 @@
             <BIcon icon="bi:trash" color="primary"/>
           </b-button>
         </label>
-        <input type="text" class="form-control" v-model="step.text" :id="`step-${index + 1}`"/>
+        <textarea class="form-control" v-model="step.text" :id="`step-${index + 1}`"></textarea>
       </div>
       <div class="d-flex flex-row justify-content-end align-items-center">
         <Transition name="spinner">
