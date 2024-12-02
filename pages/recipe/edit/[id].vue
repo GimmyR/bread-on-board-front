@@ -20,11 +20,11 @@
       </div>
       <div class="d-flex flex-column mb-4" v-for="(step, index) in steps" :key="getNowTimestamp">
         <label :for="`step-${index + 1}`" class="d-flex flex-row align-items-center form-label text-success fw-bold">
-          <b-button @click="addStepRightAfter(index)" color="outline-light" class="border-0 px-0 me-2" title="Ajouter une étape juste après">
+          <b-button @click="addStepRightAfter(index)" color="outline-light" class="border-0 px-0 me-2">
             <BIcon icon="bi:plus-lg" color="primary"/>
           </b-button>
           Etape #{{ index + 1 }}
-          <b-button @click="removeStepAt(index)" color="outline-light" class="border-0 px-0 ms-2" title="Ajouter une étape juste après">
+          <b-button @click="removeStepAt(index)" color="outline-light" class="border-0 px-0 ms-2">
             <BIcon icon="bi:trash" color="primary"/>
           </b-button>
         </label>
