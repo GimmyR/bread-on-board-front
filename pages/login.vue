@@ -9,20 +9,10 @@
           </div>
         </Transition>
         <div class="col-12 col-lg-6 mb-3">
-          <div class="input-group">
-            <span class="input-group-text">
-              <BIcon icon="bi:person" />
-            </span>
-            <input type="text" class="form-control" v-model="account.username" placeholder="Nom d'utilisateur"/>
-          </div>
+          <InputLogin type="text" v-model="account.username" placeholder="Nom d'utilisateur" icon="person" />
         </div>
         <div class="col-12 col-lg-6 mb-4">
-          <div class="input-group">
-            <span class="input-group-text">
-              <BIcon icon="bi:lock" />
-            </span>
-            <input type="password" class="form-control" v-model="account.password" placeholder="Mots de passe"/>
-          </div>
+          <InputLogin type="password" v-model="account.password" placeholder="Mots de passe" icon="lock" />
         </div>
         <div class="d-flex flex-column col-12 col-lg-6 mb-5">
           <button type="submit" class="btn btn-success mb-2">Se connecter</button>
