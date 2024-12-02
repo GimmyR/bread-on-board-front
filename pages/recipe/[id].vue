@@ -13,7 +13,7 @@
         </NuxtLink>
       </div>
       <h3 class="fs-5 mb-5">
-        par <NuxtLink :to="'/account/' + recipe.accountId" class="text-light-green text-decoration-none">Quelqu'un</NuxtLink>
+        par <NuxtLink :to="'/account/' + recipe.accountId" class="text-light-green text-decoration-none">{{ username }}</NuxtLink>
       </h3>
       <img :src="appConfig.apiURL + '/images/' + recipe.image" :alt="recipe.title" class="img-fluid col-12 col-lg-4 mb-5">
       <div class="d-flex flex-column col-12 col-lg-8 mt-2 mb-3">
@@ -48,6 +48,7 @@
   const favorite = ref('bi:suit-heart');
   const isConnectedAndAuthor = ref(false);
   const appConfig = useAppConfig();
+  const username = ref(null);
 
   onMounted(() => {
     fetchRecipe();
@@ -72,6 +73,7 @@
       onResponse({ request, response, options }) {
         if(response.status == 200) {
           recipe.value = response._data;
+          fetchUsername(response._data.accountId);
           fetchSteps();
         } else error.value = response._data;
       }
@@ -85,6 +87,15 @@
         steps.value = response._data;
       }
     });
+  };
+
+  const fetchUsername = (id) => {
+    $fetch(appConfig.apiURL + "/api/account/username/" + id, {
+      method: "GET",
+      onResponse({ request, response, options }) {
+        username.value = response._data;
+      }
+    })
   };
 
   const addToFavorite = () => {
