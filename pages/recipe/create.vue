@@ -25,13 +25,9 @@
       </div>
       <div class="d-flex flex-column mb-4" v-for="(step, index) in steps" :key="getNowTimestamp">
         <label :for="`step-${index + 1}`" class="d-flex flex-row align-items-center form-label text-success fw-bold">
-          <b-button @click="addStepRightAfter(index)" color="outline-light" class="border-0 px-0 me-2">
-            <BIcon icon="bi:plus-lg" color="primary"/>
-          </b-button>
+          <StepButton @handle-click="addStepRightAfter(index)" icon="plus-lg" icon-color="primary" class="border-0 px-0 me-2" />
           Etape #{{ index + 1 }}
-          <b-button @click="removeStepAt(index)" color="outline-light" class="border-0 px-0 ms-2">
-            <BIcon icon="bi:trash" color="primary"/>
-          </b-button>
+          <StepButton @handle-click="removeStepAt(index)" icon="trash" icon-color="primary" class="border-0 px-0 ms-2" />
         </label>
         <textarea class="form-control" v-model="step.text" :id="`step-${index + 1}`"></textarea>
       </div>
